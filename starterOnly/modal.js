@@ -8,21 +8,27 @@ function editNav() {
 }
 
 // DOM Elements
-const modalbg = document.querySelector(".bground");
-const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
+const modalbg = document.querySelector(".bground")
+const modalBtn = document.querySelectorAll(".modal-btn")
+const formData = document.querySelectorAll(".formData")
+
+
 
 // launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+modalBtn.forEach((btn) => btn.addEventListener("click", (e) => {
+  console.log("ouverture de la modal")
+  e.preventDefault()
+  launchModal(modalbg)
+}))
 
 // launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
+function launchModal(modal) {
+  modal.style.display = "block"
 }
 
 // close modal form
-function closeModal() {
-  modalbg.style.display = "none";
+function closeModal(modal) {
+  modal.style.display = "none"
 }
 
 // form control
@@ -37,138 +43,146 @@ function validateForm() {
   let inputDate = document.getElementById("birthdate")
   let inputQuantity = document.getElementById("quantity")
   let inputLocation = document.getElementById("location1")
-  let inputLocationChecked = document.querySelectorAll('input[name="location"]:checked')
   let inputTerms = document.getElementById("checkbox1")
-  let divParentFirstname = inputFirstname.parentElement
-  let divParentLastname = inputLastname.parentElement
-  let divParentEmail = inputEmail.parentElement
-  let divParentDate = inputDate.parentElement
-  let divParentQuantity = inputQuantity.parentElement
-  let divParentLocation = inputLocation.parentElement
-  let divParentTerms = inputTerms.parentElement
-  let errorMessageFirstname = divParentFirstname.querySelector(".error-msg")
-  let errorMessageLastname = divParentLastname.querySelector(".error-msg")
-  let errorMessageEmail = divParentEmail.querySelector(".error-msg")
-  let errorMessageDate = divParentDate.querySelector(".error-msg")
-  let errorMessageQuantity = divParentQuantity.querySelector(".error-msg")
-  let errorMessageLocation = divParentLocation.querySelector(".error-msg")
-  let errorMessageTerms = divParentTerms.querySelector(".error-msg")
-  let dateValidation = new Date(inputDate.value)
+  let validInput = []
+
+  validInput.push(validateInputText(inputFirstname))
+  validInput.push(validateInputText(inputLastname))
+  validInput.push(validateInputEmail(inputEmail))
+  validInput.push(validateInputDate(inputDate))
+  validInput.push(validateInputNumber(inputQuantity))
+  validInput.push(validateInputLocation(inputLocation))
+  validInput.push(validateInputTerms(inputTerms))
+
+  if (validInput.includes(false) === false) {
+    closeModal(modalbg)
+    displayValidationMessage()
+    
+  }
+
+
+}
+
+function validateInputText(input) {
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
+  if (input.value.trim().length < 2) {
+    input.classList.add('input-error')
+
+    displayErrorMsg(divErrorMessage, divParent, "Veuillez entrer 2 caractères ou plus pour ce champ.")
+    return false;
+
+  } else {
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
+  }
+  return true;
+}
+
+function validateInputEmail(input) {
   let emailRegEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-
-  if (inputFirstname.value.length < 2) {
-
-    if (errorMessageFirstname == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Doit contenir 2 caractères"
-      divParentFirstname.appendChild(newDiv)
-    }
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
+  if (emailRegEx.test(input.value) == false) {
+    input.classList.add('input-error')
+    displayErrorMsg(divErrorMessage, divParent, "L'email est invalide")
+    return false;
 
   } else {
-
-    if (errorMessageFirstname != null) {
-      errorMessageFirstname.remove()
-    }
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
   }
+  return true;
+}
 
-  if (inputLastname.value.length < 2) {
-
-    if (errorMessageLastname == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Doit contenir 2 caractères"
-      divParentLastname.appendChild(newDiv)
-    }
-
-  } else {
-
-    if (errorMessageLastname != null) {
-      errorMessageLastname.remove()
-    }
-  }
-
-  if (emailRegEx.test(inputEmail.value) == false) {
-
-    if (errorMessageEmail == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Vous devez entrer un format d'email valide."
-      divParentEmail.appendChild(newDiv)
-    }
-
-  } else {
-
-    if (errorMessageEmail != null) {
-      errorMessageEmail.remove()
-    }
-  }
-
+function validateInputDate(input) {
+  let dateValidation = new Date(input.value)
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
   if (dateValidation == "Invalid Date") {
-
-    if (errorMessageDate == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Vous devez entrer votre date de naissance."
-      divParentDate.appendChild(newDiv)
-    }
-
+    input.classList.add('input-error')
+    displayErrorMsg(divErrorMessage, divParent, "Vous devez entrer votre date de naissance.")
+    return false;
   } else {
-
-    if (errorMessageDate != null) {
-      errorMessageDate.remove()
-    }
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
   }
+  return true;
+}
 
-  if (isNaN(parseInt(inputQuantity.value )) == true) {
-
-    if (errorMessageQuantity == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Veuillez saisir un nombre."
-      divParentQuantity.appendChild(newDiv)
-    }
-
+function validateInputNumber(input) {
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
+  if (isNaN(parseInt(input.value)) == true) {
+    input.classList.add('input-error')
+    displayErrorMsg(divErrorMessage, divParent, "Veuillez entrer un  nombre")
+    return false;
   } else {
-
-    if (errorMessageQuantity != null) {
-      errorMessageQuantity.remove()
-    }
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
   }
+  return true;
+}
+
+function validateInputLocation(input) {
+  let inputLocationChecked = document.querySelectorAll('input[name="location"]:checked')
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
 
   if (inputLocationChecked.length < 1) {
-
-    if (errorMessageLocation == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Vous devez choisir une option."
-      divParentLocation.appendChild(newDiv)
-    }
-
+    input.classList.add('input-error')
+    displayErrorMsg(divErrorMessage, divParent, "Vous devez choisir une option.")
+    return false;
   } else {
-
-    if (errorMessageLocation != null) {
-      errorMessageLocation.remove()
-    }
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
   }
+  return true;
+}
 
-  if (inputTerms.checked == false) {
-
-    if (errorMessageTerms == null) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("error-msg")
-      newDiv.innerText = "Vous devez vérifier que vous acceptez les termes et conditions."
-      divParentTerms.appendChild(newDiv)
-    }
-
+function validateInputTerms(input) {
+  let divParent = input.parentElement
+  let divErrorMessage = divParent.querySelector(".error-msg")
+  if (input.checked == false) {
+    input.classList.add('input-error')
+    displayErrorMsg(divErrorMessage, divParent, "Vous devez vérifier que vous acceptez les termes et conditions.")
+    return false;
   } else {
-
-    if (errorMessageTerms != null) {
-      errorMessageTerms.remove()
-    }
+    input.classList.remove('input-error')
+    removeErrorMsg(divErrorMessage)
   }
+  return true;
+}
 
+function displayErrorMsg(divErrorMessage, divParent, errorMessage) {
+  if (divErrorMessage == null) {
+    const newDiv = document.createElement("div");
+    newDiv.classList.add("error-msg")
+    newDiv.innerText = errorMessage
+    divParent.appendChild(newDiv)
+  }
+}
+
+function removeErrorMsg(divErrorMessage) {
+  if (divErrorMessage != null) {
+    divErrorMessage.remove()
+  }
 }
 
 
 
+function displayValidationMessage() {
+  const modalValid = document.querySelector(".bground-valid")
+  launchModal(modalValid)
+
+  document.querySelector(".closeValid").addEventListener("click", (event) => {
+    event.preventDefault()
+    closeModal(modalValid)
+  })
+
+  document.querySelector(".validationModal-btn").addEventListener("click", (event) => {
+    event.preventDefault()
+    closeModal(modalValid)
+  })
+  
+}
