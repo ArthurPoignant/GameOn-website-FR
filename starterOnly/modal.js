@@ -16,7 +16,6 @@ const formData = document.querySelectorAll(".formData")
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", (e) => {
-  console.log("ouverture de la modal")
   e.preventDefault()
   launchModal(modalbg)
 }))

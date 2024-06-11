@@ -39,26 +39,47 @@ img {
     display: flex;
     justify-content: space-between;
     align-items:center;
-    margin: 0px 30px;
-    margin-bottom: 20px;
+    margin: 20px 30px;
+    
+  }
+  .topnav.responsive .main-navbar {
+    background-color: white;
   }
   
 }
 
 .topnav {
   overflow: hidden;
+  position: relative;
+  top: 0px;
+  left: 0px;
 }
 
 @media (min-width: 1024px) {
   .topnav {
     margin: 50px 50px;
   }
+  .main-navbar {
+    top: 40px;
+    right: 50px;
+  }
 }
+
+@media (max-width: 1023px) {
+  .main-navbar {
+    top: 8px;
+    right: 20px;
+    position: fixed;
+  }
+}
+
 .header-logo {
   float: left;
 }
 .main-navbar {
   float: right;
+  z-index: 10;
+  border-radius: 15px;
 }
 .topnav a {
   float: left;
@@ -92,6 +113,7 @@ img {
 @media screen and (max-width: 1096px) {
   .topnav.responsive {
     position: relative;
+    z-index: 10;
   }
   .topnav.responsive .icon {
     position: absolute;
@@ -132,6 +154,7 @@ main {
   margin: 1px 20px 15px;*/
   border-radius: 2rem;
   text-align: justify;
+  z-index: 1;
 }
 
 .modal-btn {
