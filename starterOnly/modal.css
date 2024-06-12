@@ -45,6 +45,10 @@ img {
   .topnav.responsive .main-navbar {
     background-color: white;
   }
+
+  .main-navbar {
+    position: fixed;
+  }
   
 }
 
@@ -69,7 +73,6 @@ img {
   .main-navbar {
     top: 8px;
     right: 20px;
-    position: fixed;
   }
 }
 
@@ -78,7 +81,7 @@ img {
 }
 .main-navbar {
   float: right;
-  z-index: 10;
+  z-index: 1;
   border-radius: 15px;
 }
 .topnav a {
@@ -124,6 +127,7 @@ img {
     float: none;
     display: block;
     text-align: left;
+    font-size: 13px;
   }
   .topnav a {
     display: none;
