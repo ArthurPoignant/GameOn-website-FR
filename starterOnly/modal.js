@@ -56,7 +56,7 @@ function validateForm() {
   if (validInput.includes(false) === false) {
     closeModal(modalbg)
     displayValidationMessage()
-    
+    clearFormInputs() 
   }
 
 
@@ -184,4 +184,8 @@ function displayValidationMessage() {
     closeModal(modalValid)
   })
   
+}
+
+function clearFormInputs() {
+  document.querySelector("form").reset();
 }
